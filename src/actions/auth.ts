@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
@@ -46,6 +47,17 @@ function fieldErrors(error: z.ZodError): Record<string, string> {
   return errors;
 }
 
+function authErrorMessage(error: { message: string; code?: string }) {
+  const msg = error.message.toLowerCase();
+  if (msg.includes("email not confirmed") || error.code === "email_not_confirmed") {
+    return "Confirme seu email antes de entrar. Verifique sua caixa de entrada.";
+  }
+  if (msg.includes("invalid login credentials") || error.code === "invalid_credentials") {
+    return "Email ou senha incorretos";
+  }
+  return "Não foi possível completar a operação. Tente novamente.";
+}
+
 export async function signUpAction(
   _prev: AuthFormState,
   formData: FormData
@@ -63,7 +75,7 @@ export async function signUpAction(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -73,10 +85,22 @@ export async function signUpAction(
 
   if (error) {
     return {
-      fieldErrors: { _form: "Não foi possível criar a conta. Tente novamente." },
+      fieldErrors: { _form: authErrorMessage(error) },
       values,
     };
   }
+
+  // Sem sessão = confirmação de email ainda exigida pelo Supabase
+  if (!data.session) {
+    return {
+      success: true,
+      message:
+        "Conta criada! Verifique seu email para confirmar o cadastro antes de entrar.",
+      values,
+    };
+  }
+
+  revalidatePath("/", "layout");
 
   if (parsed.data.tipo === "designer") redirect("/designers/novo");
   redirect("/vagas/nova");
@@ -105,17 +129,19 @@ export async function signInAction(
 
   if (error) {
     return {
-      fieldErrors: { _form: "Email ou senha incorretos" },
+      fieldErrors: { _form: authErrorMessage(error) },
       values,
     };
   }
 
+  revalidatePath("/", "layout");
   redirect(values.redirect || "/");
 }
 
 export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  revalidatePath("/", "layout");
   redirect("/");
 }
 
