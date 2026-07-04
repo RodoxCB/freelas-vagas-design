@@ -64,6 +64,17 @@ export function SignUpForm() {
   const values = state.values ?? {};
   const errors = state.fieldErrors ?? {};
 
+  if (state.success) {
+    return (
+      <div className="space-y-4 text-center">
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {state.message}
+        </div>
+        <Button href="/login">Ir para login</Button>
+      </div>
+    );
+  }
+
   return (
     <form action={action} className="space-y-4">
       {errors._form && (

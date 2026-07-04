@@ -33,6 +33,8 @@ export async function middleware(request: NextRequest) {
   );
 
   const { pathname } = request.nextUrl;
+
+  // Refresh session on every request
   const { data: { user } } = await supabase.auth.getUser();
 
   const matched = Object.entries(protectedRoutes).find(([route]) =>
@@ -65,9 +67,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/designers/novo",
-    "/designers/editar",
-    "/vagas/nova",
-    "/vagas/minhas",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
