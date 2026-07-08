@@ -13,7 +13,7 @@ export function Button({
 }) {
   const variants = {
     primary:
-      "bg-indigo-600 text-white hover:bg-indigo-700 border border-transparent",
+      "bg-[var(--color-primary)] text-white hover:opacity-90 border border-transparent",
     secondary:
       "bg-white text-zinc-900 hover:bg-zinc-50 border border-zinc-200",
     ghost: "bg-transparent text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent",
@@ -93,7 +93,7 @@ export function Input({
         </label>
       )}
       <input
-        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 ${className}`}
+        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] ${className}`}
         {...props}
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
@@ -118,7 +118,7 @@ export function Textarea({
         </label>
       )}
       <textarea
-        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 ${className}`}
+        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] ${className}`}
         {...props}
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
@@ -142,7 +142,7 @@ export function Checkbox({
       <label className={`flex items-start gap-3 text-sm text-zinc-700 ${className}`}>
         <input
           type="checkbox"
-          className="mt-1 h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+          className="mt-1 h-4 w-4 rounded border-zinc-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
           {...props}
         />
         <span>

@@ -9,8 +9,8 @@ export default async function AdminConteudoPage() {
   return (
     <div>
       <p className="mb-6 text-sm text-zinc-600">
-        Edite textos e links do site. Valores iguais ao padrão não são gravados no banco.
-        Alterações entram em vigor imediatamente, sem novo deploy.
+        Edite textos, links e cores do site por seção. A pré-visualização atualiza em
+        tempo real. Valores iguais ao padrão não são gravados no banco.
       </p>
       <SiteContentForm content={content} />
     </div>

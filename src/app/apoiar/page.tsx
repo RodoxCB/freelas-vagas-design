@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PixCopyButton } from "@/components/apoiar/pix-copy-button";
 import { getContentValue, getSiteContent } from "@/lib/site-content";
 
 export async function generateMetadata() {
@@ -12,9 +13,10 @@ export default async function ApoiarPage() {
   const content = await getSiteContent();
   const linkUrl = getContentValue(content, "apoiar.link_url").trim();
   const linkLabel = getContentValue(content, "apoiar.link_label").trim();
+  const pixKey = getContentValue(content, "apoiar.pix_key").trim();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 text-center">
+    <div className="mx-auto max-w-2xl px-4 py-16 text-center sm:px-6">
       <h1 className="text-3xl font-semibold text-zinc-900">
         {getContentValue(content, "apoiar.title")}
       </h1>
@@ -24,6 +26,28 @@ export default async function ApoiarPage() {
       <p className="mt-4 text-zinc-600">
         {getContentValue(content, "apoiar.body")}
       </p>
+
+      {pixKey ? (
+        <div className="mt-10 rounded-xl border border-zinc-200 bg-white p-6 text-left">
+          <p className="text-center text-sm font-medium text-zinc-900">
+            {getContentValue(content, "apoiar.note")}
+          </p>
+          <p className="mt-4 text-center text-xs font-medium uppercase tracking-wide text-zinc-500">
+            Chave Pix
+          </p>
+          <p className="mt-2 break-all rounded-lg bg-zinc-50 px-4 py-3 text-center font-mono text-sm text-zinc-800">
+            {pixKey}
+          </p>
+          <div className="mt-4 flex justify-center">
+            <PixCopyButton pixKey={pixKey} />
+          </div>
+        </div>
+      ) : (
+        <p className="mt-8 text-sm text-zinc-500">
+          {getContentValue(content, "apoiar.note")}
+        </p>
+      )}
+
       {linkUrl && linkLabel ? (
         <Link
           href={linkUrl}
@@ -33,11 +57,7 @@ export default async function ApoiarPage() {
         >
           {linkLabel}
         </Link>
-      ) : (
-        <p className="mt-8 text-sm text-zinc-500">
-          {getContentValue(content, "apoiar.note")}
-        </p>
-      )}
+      ) : null}
     </div>
   );
 }

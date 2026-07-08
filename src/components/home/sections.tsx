@@ -62,7 +62,7 @@ export function HowItWorks({ content }: { content: SiteContentMap }) {
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {steps.map((step, i) => (
           <div key={step.title} className="space-y-2">
-            <span className="text-sm font-medium text-indigo-600">{i + 1}</span>
+            <span className="text-sm font-medium text-[var(--color-primary)]">{i + 1}</span>
             <h3 className="font-medium text-zinc-900">{step.title}</h3>
             <p className="text-sm text-zinc-600">{step.description}</p>
           </div>
@@ -91,7 +91,7 @@ export function CommunityBlock({ content }: { content: SiteContentMap }) {
           href={comunidadeUrl}
           target={comunidadeUrl.startsWith("http") ? "_blank" : undefined}
           rel={comunidadeUrl.startsWith("http") ? "noopener noreferrer" : undefined}
-          className="inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+          className="inline-flex rounded-lg bg-[var(--color-primary)] px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
         >
           {getContentValue(content, "home.community.button")}
         </Link>
