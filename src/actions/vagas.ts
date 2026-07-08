@@ -8,6 +8,7 @@ import {
   vagaFormSchema,
   zodFieldErrors,
 } from "@/lib/validations/vaga";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 import type { Vaga } from "@/types/database";
 
 export type VagaFilters = {
@@ -96,10 +97,20 @@ export async function createVagaAction(
   }
 
   const raw = parseVagaFormData(formData);
+  const { consentimento_publicacao: _consent, ...valuesForState } = raw;
   const parsed = vagaFormSchema.safeParse(raw);
 
   if (!parsed.success) {
-    return { success: false, fieldErrors: zodFieldErrors(parsed.error), values: raw };
+    return {
+      success: false,
+      fieldErrors: zodFieldErrors(parsed.error),
+      values: valuesForState,
+    };
+  }
+
+  const rateError = await checkRateLimit(auth.user.id, "create_vaga");
+  if (rateError) {
+    return { success: false, fieldErrors: { _form: rateError }, values: valuesForState };
   }
 
   let imagemUrl: string | null = null;
@@ -107,7 +118,7 @@ export async function createVagaAction(
   if (imagem && imagem.size > 0) {
     const upload = await uploadImage(auth.supabase, imagem, "vagas", auth.user.id, "vaga");
     if ("error" in upload) {
-      return { success: false, fieldErrors: { imagem: upload.error }, values: raw };
+      return { success: false, fieldErrors: { imagem: upload.error }, values: valuesForState };
     }
     imagemUrl = upload.url;
   }
@@ -128,13 +139,14 @@ export async function createVagaAction(
       imagem_url: imagemUrl,
       status: "ativa",
       expires_at: expiresAt.toISOString(),
+      consentimento_publicacao_at: new Date().toISOString(),
     })
     .select("id")
     .single();
 
   if (error) {
     console.error("createVaga error:", error);
-    return { success: false, fieldErrors: { _form: "Erro ao publicar vaga." }, values: raw };
+    return { success: false, fieldErrors: { _form: "Erro ao publicar vaga." }, values: valuesForState };
   }
 
   revalidatePath("/vagas");

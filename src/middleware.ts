@@ -6,6 +6,7 @@ const protectedRoutes: Record<string, "designer" | "anunciante" | "any"> = {
   "/designers/editar": "designer",
   "/vagas/nova": "anunciante",
   "/vagas/minhas": "anunciante",
+  "/conta/dados": "any",
 };
 
 export async function middleware(request: NextRequest) {

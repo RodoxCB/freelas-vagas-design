@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { processImage, validateImageFile } from "@/lib/images/process";
+import { normalizeTagName } from "@/lib/security/sanitize";
+import { touchLastSeen } from "@/lib/auth/activity";
 import type { Profile } from "@/types/database";
 
 export async function getSession() {
@@ -43,6 +45,8 @@ export async function requireAuth(tipo?: "designer" | "anunciante") {
     };
   }
 
+  void touchLastSeen(user.id);
+
   return { error: null, supabase, user, profile };
 }
 
@@ -78,10 +82,12 @@ export async function upsertTags(
   tagNames: string[]
 ): Promise<string[]> {
   const ids: string[] = [];
-  for (const nome of tagNames) {
-    const trimmed = nome.trim();
-    if (!trimmed) continue;
+  const unique = [...new Set(tagNames.map((n) => normalizeTagName(n)).filter(Boolean))].slice(
+    0,
+    15
+  ) as string[];
 
+  for (const trimmed of unique) {
     const { data: existing } = await supabase
       .from("tags")
       .select("id")

@@ -7,7 +7,19 @@ export function Footer() {
         <p className="text-sm text-zinc-500">
           Projeto comunitário para conectar designers e oportunidades.
         </p>
-        <div className="flex gap-6">
+        <div className="flex flex-wrap gap-6">
+          <Link
+            href="/privacidade"
+            className="text-sm text-zinc-600 hover:text-zinc-900"
+          >
+            Privacidade
+          </Link>
+          <Link
+            href="/termos"
+            className="text-sm text-zinc-600 hover:text-zinc-900"
+          >
+            Termos
+          </Link>
           <Link
             href="/comunidade"
             className="text-sm text-zinc-600 hover:text-zinc-900"

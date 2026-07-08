@@ -3,6 +3,7 @@ export type Profile = {
   tipo: "designer" | "anunciante";
   nome: string | null;
   created_at: string;
+  last_seen_at: string | null;
 };
 
 export type Tag = {
@@ -13,7 +14,7 @@ export type Tag = {
 
 export type Designer = {
   id: string;
-  user_id: string | null;
+  user_id: string;
   nome: string;
   foto_url: string | null;
   especialidades: string[];
@@ -24,13 +25,14 @@ export type Designer = {
   whatsapp: string;
   localizacao: string | null;
   status: "ativo" | "oculto";
+  consentimento_publicacao_at: string | null;
   created_at: string;
   tags?: Tag[];
 };
 
 export type DesignerInsert = {
   id?: string;
-  user_id?: string | null;
+  user_id: string;
   nome: string;
   foto_url?: string | null;
   especialidades: string[];
@@ -41,12 +43,13 @@ export type DesignerInsert = {
   whatsapp: string;
   localizacao?: string | null;
   status?: "ativo" | "oculto";
+  consentimento_publicacao_at?: string | null;
   created_at?: string;
 };
 
 export type Vaga = {
   id: string;
-  user_id: string | null;
+  user_id: string;
   titulo: string;
   tipo: "freela" | "estagio" | "clt";
   descricao: string;
@@ -55,13 +58,14 @@ export type Vaga = {
   contato_telefone: string;
   imagem_url: string | null;
   status: "ativa" | "encerrada";
+  consentimento_publicacao_at: string | null;
   created_at: string;
   expires_at: string;
 };
 
 export type VagaInsert = {
   id?: string;
-  user_id?: string | null;
+  user_id: string;
   titulo: string;
   tipo: "freela" | "estagio" | "clt";
   descricao: string;
@@ -70,8 +74,16 @@ export type VagaInsert = {
   contato_telefone: string;
   imagem_url?: string | null;
   status?: "ativa" | "encerrada";
+  consentimento_publicacao_at?: string | null;
   created_at?: string;
   expires_at?: string;
+};
+
+export type RateLimit = {
+  id: string;
+  user_id: string;
+  action: string;
+  created_at: string;
 };
 
 export type Database = {
@@ -79,7 +91,10 @@ export type Database = {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Omit<Profile, "created_at"> & { created_at?: string };
+        Insert: Omit<Profile, "created_at" | "last_seen_at"> & {
+          created_at?: string;
+          last_seen_at?: string | null;
+        };
         Update: Partial<Profile>;
         Relationships: [];
       };
@@ -107,9 +122,24 @@ export type Database = {
         Update: Partial<VagaInsert>;
         Relationships: [];
       };
+      rate_limits: {
+        Row: RateLimit;
+        Insert: Omit<RateLimit, "id" | "created_at"> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<RateLimit>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      anonymize_expired_vagas: { Args: Record<string, never>; Returns: number };
+      get_inactive_users_for_deletion: {
+        Args: Record<string, never>;
+        Returns: { user_id: string }[];
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

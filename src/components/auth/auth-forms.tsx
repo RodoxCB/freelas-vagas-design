@@ -9,7 +9,9 @@ import {
   updatePasswordAction,
   type AuthFormState,
 } from "@/actions/auth";
-import { Button, Input, Select } from "@/components/ui";
+import { TurnstileWidget } from "@/components/auth/turnstile";
+import { Button, Checkbox, Input, Select } from "@/components/ui";
+import { PASSWORD_HINT } from "@/lib/security/password";
 import { USER_TIPO_LABELS } from "@/lib/constants";
 
 export function LoginForm({ redirect }: { redirect?: string }) {
@@ -44,6 +46,7 @@ export function LoginForm({ redirect }: { redirect?: string }) {
         defaultValue={values.password ?? ""}
         error={errors.password}
       />
+      <TurnstileWidget />
       <div className="text-right">
         <Link href="/esqueci-senha" className="text-sm text-indigo-600 hover:text-indigo-700">
           Esqueci minha senha
@@ -104,7 +107,7 @@ export function SignUpForm() {
         required
         defaultValue={values.password ?? ""}
         error={errors.password}
-        placeholder="Mínimo 6 caracteres"
+        placeholder={PASSWORD_HINT}
       />
       <Select
         label="Eu sou..."
@@ -117,6 +120,24 @@ export function SignUpForm() {
           <option key={value} value={value}>{label}</option>
         ))}
       </Select>
+      <Checkbox
+        name="aceite_termos"
+        required
+        error={errors.aceite_termos}
+        label={
+          <>
+            Li e aceito os{" "}
+            <Link href="/termos" className="text-indigo-600 hover:text-indigo-700">
+              Termos de Uso
+            </Link>{" "}
+            e a{" "}
+            <Link href="/privacidade" className="text-indigo-600 hover:text-indigo-700">
+              Política de Privacidade
+            </Link>
+          </>
+        }
+      />
+      <TurnstileWidget />
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Criando conta..." : "Criar conta"}
       </Button>
@@ -193,7 +214,7 @@ export function ResetPasswordForm() {
         required
         defaultValue={values.password ?? ""}
         error={errors.password}
-        placeholder="Mínimo 6 caracteres"
+        placeholder={PASSWORD_HINT}
       />
       <Input
         label="Confirmar senha"

@@ -14,6 +14,7 @@ import {
   parseDesignerFormData,
   zodFieldErrors,
 } from "@/lib/validations/designer";
+import { checkRateLimit } from "@/lib/security/rate-limit";
 import type { Designer, Tag } from "@/types/database";
 
 export type DesignerFilters = {
@@ -171,6 +172,11 @@ export async function createDesignerAction(
     return { success: false, fieldErrors: zodFieldErrors(parsed.error), values };
   }
 
+  const rateError = await checkRateLimit(auth.user.id, "create_designer");
+  if (rateError) {
+    return { success: false, fieldErrors: { _form: rateError }, values };
+  }
+
   let fotoUrl: string | null = null;
   const foto = formData.get("foto") as File | null;
   if (foto && foto.size > 0) {
@@ -198,6 +204,7 @@ export async function createDesignerAction(
       bio: parsed.data.bio || null,
       localizacao: parsed.data.localizacao || null,
       status,
+      consentimento_publicacao_at: new Date().toISOString(),
     })
     .select("id")
     .single();
@@ -233,7 +240,11 @@ export async function updateDesignerAction(
 
   const raw = parseDesignerFormData(formData);
   const values = formValuesToState(raw);
-  const parsed = designerFormSchema.safeParse(raw);
+
+  const needsConsent = !existing.consentimento_publicacao_at;
+  const parsed = needsConsent
+    ? designerFormSchema.safeParse(raw)
+    : designerFormSchema.omit({ consentimento_publicacao: true }).safeParse(raw);
 
   if (!parsed.success) {
     return { success: false, fieldErrors: zodFieldErrors(parsed.error), values };
@@ -251,6 +262,10 @@ export async function updateDesignerAction(
 
   const portfolioUrls = parsed.data.portfolio_urls.map((u) => u.trim());
   const status = portfolioUrls.length > 0 ? "ativo" : "oculto";
+  const consentAt =
+    needsConsent && "consentimento_publicacao" in parsed.data
+      ? new Date().toISOString()
+      : existing.consentimento_publicacao_at;
 
   const { error } = await auth.supabase
     .from("designers")
@@ -265,6 +280,7 @@ export async function updateDesignerAction(
       bio: parsed.data.bio || null,
       localizacao: parsed.data.localizacao || null,
       status,
+      consentimento_publicacao_at: consentAt,
     })
     .eq("id", designerId);
 
