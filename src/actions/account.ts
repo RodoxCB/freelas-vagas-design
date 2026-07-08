@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createServiceClient } from "@/lib/supabase/admin";
+import { deleteAuthUser } from "@/lib/admin/user-lifecycle";
 import { requireAuth } from "@/lib/auth/session";
 import type { Designer, Profile, Vaga } from "@/types/database";
 
@@ -14,18 +14,6 @@ export type AccountDataExport = {
   designer: Designer | null;
   vagas: Vaga[];
 };
-
-async function deleteUserStorage(userId: string) {
-  const supabase = createServiceClient();
-
-  for (const bucket of ["avatars", "vagas"] as const) {
-    const { data: files } = await supabase.storage.from(bucket).list(userId);
-    if (!files?.length) continue;
-
-    const paths = files.map((file) => `${userId}/${file.name}`);
-    await supabase.storage.from(bucket).remove(paths);
-  }
-}
 
 export async function exportUserDataAction(): Promise<AccountDataExport | null> {
   const auth = await requireAuth();
@@ -86,13 +74,8 @@ export async function deleteAccountAction(): Promise<{ success: boolean; error?:
   if (!confirm) return { success: false, error: "Conta inválida." };
 
   try {
-    await deleteUserStorage(auth.user.id);
-
-    const service = createServiceClient();
-    const { error } = await service.auth.admin.deleteUser(auth.user.id);
-
-    if (error) {
-      console.error("deleteUser error:", error);
+    const err = await deleteAuthUser(auth.user.id);
+    if (err) {
       return { success: false, error: "Não foi possível excluir a conta. Tente novamente." };
     }
   } catch (err) {

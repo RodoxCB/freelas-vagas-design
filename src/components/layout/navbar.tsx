@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { getProfile, getSession } from "@/lib/auth/session";
+import { getContentValue, getSiteContent } from "@/lib/site-content";
 import { Button } from "@/components/ui";
 
 const links = [
@@ -11,13 +12,16 @@ const links = [
 
 export async function Navbar() {
   const { user } = await getSession();
-  const profile = user ? await getProfile() : null;
+  const [profile, content] = await Promise.all([
+    user ? getProfile() : Promise.resolve(null),
+    getSiteContent(),
+  ]);
 
   return (
     <header className="border-b border-zinc-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="text-lg font-semibold text-zinc-900">
-          Freelas e Vagas de Design
+          {getContentValue(content, "site.name")}
         </Link>
         <nav className="flex items-center gap-4 sm:gap-6">
           {links.map((link) => (
@@ -45,6 +49,15 @@ export async function Navbar() {
               className="text-sm text-zinc-600 hover:text-zinc-900"
             >
               Minhas vagas
+            </Link>
+          )}
+
+          {profile?.is_admin && (
+            <Link
+              href="/admin"
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            >
+              Admin
             </Link>
           )}
 

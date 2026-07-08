@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import { getContentValue, type SiteContentMap } from "@/lib/site-content";
 
-export function HeroBlocks() {
+export function HeroBlocks({ content }: { content: SiteContentMap }) {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <div className="rounded-xl border border-zinc-200 bg-white p-8">
         <h2 className="text-xl font-semibold text-zinc-900">
-          Precisa de um designer?
+          {getContentValue(content, "home.block1.title")}
         </h2>
         <p className="mt-3 text-zinc-600">
-          Encontre alguém disponível ou publique uma oportunidade e receba
-          contatos direto
+          {getContentValue(content, "home.block1.text")}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button href="/designers">Buscar designers</Button>
@@ -22,11 +22,10 @@ export function HeroBlocks() {
 
       <div className="rounded-xl border border-zinc-200 bg-white p-8">
         <h2 className="text-xl font-semibold text-zinc-900">
-          Você é designer?
+          {getContentValue(content, "home.block2.title")}
         </h2>
         <p className="mt-3 text-zinc-600">
-          Crie seu perfil para ser encontrado ou explore vagas abertas na
-          comunidade
+          {getContentValue(content, "home.block2.text")}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button href="/designers/novo">Criar meu perfil</Button>
@@ -39,31 +38,31 @@ export function HeroBlocks() {
   );
 }
 
-export function HowItWorks() {
+export function HowItWorks({ content }: { content: SiteContentMap }) {
   const steps = [
     {
-      title: "Crie seu perfil ou publique uma vaga",
-      description: "Sem cadastro complicado. Preencha o básico e pronto.",
+      title: getContentValue(content, "home.how.step1.title"),
+      description: getContentValue(content, "home.how.step1.text"),
     },
     {
-      title: "Encontre oportunidades ou profissionais",
-      description: "Busque por área, nível e disponibilidade.",
+      title: getContentValue(content, "home.how.step2.title"),
+      description: getContentValue(content, "home.how.step2.text"),
     },
     {
-      title: "Converse direto pelo canal informado",
-      description: "WhatsApp, email ou link externo. Sem intermediários.",
+      title: getContentValue(content, "home.how.step3.title"),
+      description: getContentValue(content, "home.how.step3.text"),
     },
   ];
 
   return (
     <section>
-      <h2 className="text-2xl font-semibold text-zinc-900">Como funciona</h2>
+      <h2 className="text-2xl font-semibold text-zinc-900">
+        {getContentValue(content, "home.how.title")}
+      </h2>
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {steps.map((step, i) => (
           <div key={step.title} className="space-y-2">
-            <span className="text-sm font-medium text-indigo-600">
-              {i + 1}
-            </span>
+            <span className="text-sm font-medium text-indigo-600">{i + 1}</span>
             <h3 className="font-medium text-zinc-900">{step.title}</h3>
             <p className="text-sm text-zinc-600">{step.description}</p>
           </div>
@@ -73,17 +72,19 @@ export function HowItWorks() {
   );
 }
 
-export function CommunityBlock() {
+export function CommunityBlock({ content }: { content: SiteContentMap }) {
   const comunidadeUrl =
-    process.env.NEXT_PUBLIC_COMUNIDADE_URL || "/comunidade";
+    content["comunidade.url"]?.trim() ||
+    process.env.NEXT_PUBLIC_COMUNIDADE_URL ||
+    "/comunidade";
 
   return (
     <section className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
-      <h2 className="text-2xl font-semibold text-zinc-900">Comunidade</h2>
+      <h2 className="text-2xl font-semibold text-zinc-900">
+        {getContentValue(content, "home.community.title")}
+      </h2>
       <p className="mx-auto mt-4 max-w-xl text-zinc-600">
-        Esse projeto nasceu de um grupo de designers que compartilham
-        oportunidades todos os dias. A ideia é deixar isso mais organizado,
-        aberto e fácil para todo mundo.
+        {getContentValue(content, "home.community.text")}
       </p>
       <div className="mt-6">
         <Link
@@ -92,7 +93,7 @@ export function CommunityBlock() {
           rel={comunidadeUrl.startsWith("http") ? "noopener noreferrer" : undefined}
           className="inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700"
         >
-          Entrar na comunidade
+          {getContentValue(content, "home.community.button")}
         </Link>
       </div>
     </section>
