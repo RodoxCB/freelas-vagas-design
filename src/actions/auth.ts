@@ -127,7 +127,7 @@ export async function signInAction(
   formData: FormData
 ): Promise<AuthFormState> {
   const values = {
-    email: (formData.get("email") as string) ?? "",
+    email: ((formData.get("email") as string) ?? "").trim().toLowerCase(),
     password: (formData.get("password") as string) ?? "",
     redirect: (formData.get("redirect") as string) ?? "",
   };
