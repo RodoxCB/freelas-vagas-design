@@ -6,7 +6,7 @@ import {
   updateDesignerAction,
   type DesignerFormState,
 } from "@/actions/designers";
-import { Button, Input, Select, Textarea } from "@/components/ui";
+import { Button, Checkbox, Input, Select, Textarea } from "@/components/ui";
 import { EspecialidadesSelect } from "@/components/ui/multi-select";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { PhoneInput } from "@/components/ui/phone-input";
@@ -170,6 +170,15 @@ export function DesignerForm({
         defaultValue={values.localizacao ?? designer?.localizacao ?? ""}
         placeholder="São Paulo, SP"
       />
+
+      {(!designer?.consentimento_publicacao_at || mode === "create") && (
+        <Checkbox
+          name="consentimento_publicacao"
+          required
+          error={errors.consentimento_publicacao}
+          label="Autorizo a exibição pública dos meus dados de contato e perfil na plataforma"
+        />
+      )}
 
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Salvando..." : mode === "edit" ? "Salvar alterações" : "Criar perfil"}

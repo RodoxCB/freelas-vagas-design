@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { MAX_PORTFOLIO_LINKS, NIVEIS } from "@/lib/constants";
+import { isSafeHttpUrl } from "@/lib/security/sanitize";
 
-const urlSchema = z.string().url("Informe uma URL válida");
+const MAX_TAGS = 15;
+
+const urlSchema = z
+  .string()
+  .url("Informe uma URL válida")
+  .refine(isSafeHttpUrl, "URL não permitida");
 
 export const designerFormSchema = z.object({
   nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -16,8 +22,14 @@ export const designerFormSchema = z.object({
   whatsapp: z.string().min(10, "Informe um WhatsApp válido"),
   linkedin_url: z.union([urlSchema, z.literal("")]).optional(),
   bio: z.string().max(500).optional(),
-  tags: z.array(z.string()).optional(),
+  tags: z
+    .array(z.string().max(30, "Tag com no máximo 30 caracteres"))
+    .max(MAX_TAGS, `Máximo de ${MAX_TAGS} tags`)
+    .optional(),
   localizacao: z.string().optional(),
+  consentimento_publicacao: z.literal(true, {
+    message: "É necessário autorizar a exibição pública dos seus dados",
+  }),
 });
 
 export type DesignerFormValues = z.infer<typeof designerFormSchema>;
@@ -46,6 +58,7 @@ export function parseDesignerFormData(formData: FormData) {
     bio: (formData.get("bio") as string) ?? "",
     tags,
     localizacao: (formData.get("localizacao") as string) ?? "",
+    consentimento_publicacao: formData.get("consentimento_publicacao") === "on",
   };
 }
 

@@ -3,13 +3,19 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { touchLastSeen } from "@/lib/auth/activity";
+import { verifyTurnstile } from "@/lib/security/captcha";
+import { passwordSchema } from "@/lib/security/password";
 import { z } from "zod";
 
 const signUpSchema = z.object({
   nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   email: z.string().email("Email inválido"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+  password: passwordSchema,
   tipo: z.enum(["designer", "anunciante"]),
+  aceite_termos: z.literal(true, {
+    message: "É necessário aceitar os Termos e a Política de Privacidade",
+  }),
 });
 
 const signInSchema = z.object({
@@ -23,7 +29,7 @@ const resetSchema = z.object({
 
 const updatePasswordSchema = z
   .object({
-    password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
+    password: passwordSchema,
     confirmPassword: z.string(),
   })
   .refine((d) => d.password === d.confirmPassword, {
@@ -67,11 +73,21 @@ export async function signUpAction(
     email: (formData.get("email") as string) ?? "",
     password: (formData.get("password") as string) ?? "",
     tipo: (formData.get("tipo") as string) ?? "designer",
+    aceite_termos: formData.get("aceite_termos") === "on",
   };
+  const { aceite_termos: _, ...formValues } = values;
 
   const parsed = signUpSchema.safeParse(values);
   if (!parsed.success) {
-    return { fieldErrors: fieldErrors(parsed.error), values };
+    return { fieldErrors: fieldErrors(parsed.error), values: formValues };
+  }
+
+  const captchaToken = formData.get("cf-turnstile-response") as string | null;
+  if (!(await verifyTurnstile(captchaToken))) {
+    return {
+      fieldErrors: { _form: "Verificação de segurança falhou. Tente novamente." },
+      values: formValues,
+    };
   }
 
   const supabase = await createClient();
@@ -86,7 +102,7 @@ export async function signUpAction(
   if (error) {
     return {
       fieldErrors: { _form: authErrorMessage(error) },
-      values,
+      values: formValues,
     };
   }
 
@@ -96,7 +112,7 @@ export async function signUpAction(
       success: true,
       message:
         "Conta criada! Verifique seu email para confirmar o cadastro antes de entrar.",
-      values,
+      values: formValues,
     };
   }
 
@@ -121,8 +137,16 @@ export async function signInAction(
     return { fieldErrors: fieldErrors(parsed.error), values };
   }
 
+  const captchaToken = formData.get("cf-turnstile-response") as string | null;
+  if (!(await verifyTurnstile(captchaToken))) {
+    return {
+      fieldErrors: { _form: "Verificação de segurança falhou. Tente novamente." },
+      values,
+    };
+  }
+
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: values.password,
   });
@@ -133,6 +157,8 @@ export async function signInAction(
       values,
     };
   }
+
+  if (data.user) void touchLastSeen(data.user.id);
 
   revalidatePath("/", "layout");
   redirect(values.redirect || "/");

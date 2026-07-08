@@ -21,12 +21,21 @@ additional_redirect_urls = [
   "http://localhost:3000/auth/callback",
 ]
 enable_signup = true
-minimum_password_length = 6
+minimum_password_length = 8
+password_requirements = "lower_upper_letters_digits"
+jwt_expiry = 3600
+
+[auth.rate_limit]
+email_sent = 4
+sign_in_sign_ups = 10
+token_verifications = 10
+token_refresh = 100
 
 [auth.email]
 enable_signup = true
 double_confirm_changes = true
-enable_confirmations = false
+enable_confirmations = true
+secure_password_change = true
 
 [storage]
 enabled = true

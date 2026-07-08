@@ -126,6 +126,35 @@ export function Textarea({
   );
 }
 
+export function Checkbox({
+  label,
+  error,
+  children,
+  className = "",
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & {
+  label?: ReactNode;
+  error?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className={`flex items-start gap-3 text-sm text-zinc-700 ${className}`}>
+        <input
+          type="checkbox"
+          className="mt-1 h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+          {...props}
+        />
+        <span>
+          {label}
+          {children}
+        </span>
+      </label>
+      {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
 export function Select({
   label,
   error,

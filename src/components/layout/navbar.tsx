@@ -48,6 +48,15 @@ export async function Navbar() {
             </Link>
           )}
 
+          {user && (
+            <Link
+              href="/conta/dados"
+              className="text-sm text-zinc-600 hover:text-zinc-900"
+            >
+              Meus dados
+            </Link>
+          )}
+
           {!user ? (
             <>
               <Link href="/login" className="text-sm text-zinc-600 hover:text-zinc-900">

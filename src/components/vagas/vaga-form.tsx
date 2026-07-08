@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { createVagaAction, type VagaFormState } from "@/actions/vagas";
-import { Button, Input, Select, Textarea } from "@/components/ui";
+import { Button, Checkbox, Input, Select, Textarea } from "@/components/ui";
 import { VagaImageUpload } from "@/components/ui/image-upload";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { TIPOS_VAGA } from "@/lib/constants";
@@ -114,6 +114,13 @@ export function VagaForm() {
       <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
         Essa vaga ficará visível por 45 dias.
       </div>
+
+      <Checkbox
+        name="consentimento_publicacao"
+        required
+        error={errors.consentimento_publicacao}
+        label="Autorizo a exibição pública do email e telefone de contato desta vaga"
+      />
 
       <Button type="submit" disabled={pending} className="w-full">
         {pending ? "Publicando..." : "Publicar vaga"}

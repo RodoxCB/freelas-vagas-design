@@ -14,6 +14,9 @@ export const vagaFormSchema = z.object({
   requisitos: z.string().optional(),
   contato_email: emailSchema,
   contato_telefone: phoneSchema,
+  consentimento_publicacao: z.literal(true, {
+    message: "É necessário autorizar a exibição pública dos dados de contato",
+  }),
 });
 
 export type VagaFormValues = z.infer<typeof vagaFormSchema>;
@@ -26,6 +29,7 @@ export function parseVagaFormData(formData: FormData) {
     requisitos: (formData.get("requisitos") as string) ?? "",
     contato_email: (formData.get("contato_email") as string) ?? "",
     contato_telefone: (formData.get("contato_telefone") as string) ?? "",
+    consentimento_publicacao: formData.get("consentimento_publicacao") === "on",
   };
 }
 
