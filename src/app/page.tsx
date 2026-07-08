@@ -9,38 +9,40 @@ import {
 } from "@/components/home/sections";
 import { SearchBar } from "@/components/home/search-bar";
 import { VagaCard } from "@/components/vagas/vaga-card";
+import { getContentValue, getSiteContent } from "@/lib/site-content";
 
 export default async function HomePage() {
-  const [designers, vagas] = await Promise.all([
+  const [designers, vagas, content] = await Promise.all([
     getFeaturedDesigners(6),
     getRecentVagas(5),
+    getSiteContent(),
   ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
-          Freelas e Vagas de Design
+          {getContentValue(content, "home.hero.title")}
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-zinc-600">
-          Encontre designers disponíveis de forma simples e rápida
+          {getContentValue(content, "home.hero.subtitle")}
         </p>
       </div>
 
-      <HeroBlocks />
+      <HeroBlocks content={content} />
 
       <div className="mt-12">
         <SearchBar />
       </div>
 
       <div className="mt-20">
-        <HowItWorks />
+        <HowItWorks content={content} />
       </div>
 
       <section className="mt-20">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-zinc-900">
-            Designers em destaque
+            {getContentValue(content, "home.featured.title")}
           </h2>
           <Link
             href="/designers"
@@ -57,7 +59,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="mt-6 text-zinc-500">
-            Nenhum designer cadastrado ainda.{" "}
+            {getContentValue(content, "home.empty.designers")}{" "}
             <Link href="/designers/novo" className="text-indigo-600">
               Seja o primeiro
             </Link>
@@ -67,7 +69,9 @@ export default async function HomePage() {
 
       <section className="mt-20">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-zinc-900">Vagas recentes</h2>
+          <h2 className="text-2xl font-semibold text-zinc-900">
+            {getContentValue(content, "home.vagas.title")}
+          </h2>
           <Link
             href="/vagas"
             className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
@@ -83,7 +87,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="mt-6 text-zinc-500">
-            Nenhuma vaga publicada ainda.{" "}
+            {getContentValue(content, "home.empty.vagas")}{" "}
             <Link href="/vagas/nova" className="text-indigo-600">
               Publicar a primeira
             </Link>
@@ -92,7 +96,7 @@ export default async function HomePage() {
       </section>
 
       <div className="mt-20">
-        <CommunityBlock />
+        <CommunityBlock content={content} />
       </div>
     </div>
   );

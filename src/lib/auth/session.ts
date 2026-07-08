@@ -50,6 +50,18 @@ export async function requireAuth(tipo?: "designer" | "anunciante") {
   return { error: null, supabase, user, profile };
 }
 
+export async function requireAdmin() {
+  const auth = await requireAuth();
+  if (auth.error || !auth.user || !auth.profile) return auth;
+  if (!auth.profile.is_admin) {
+    return {
+      ...auth,
+      error: "Acesso restrito a administradores",
+    };
+  }
+  return { ...auth, error: null };
+}
+
 export async function uploadImage(
   supabase: Awaited<ReturnType<typeof createClient>>,
   file: File,

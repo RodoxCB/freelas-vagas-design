@@ -2,8 +2,16 @@ export type Profile = {
   id: string;
   tipo: "designer" | "anunciante";
   nome: string | null;
+  is_admin: boolean;
   created_at: string;
   last_seen_at: string | null;
+};
+
+export type SiteContentRow = {
+  key: string;
+  value: unknown;
+  updated_at: string;
+  updated_by: string | null;
 };
 
 export type Tag = {
@@ -91,9 +99,10 @@ export type Database = {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Omit<Profile, "created_at" | "last_seen_at"> & {
+        Insert: Omit<Profile, "created_at" | "last_seen_at" | "is_admin"> & {
           created_at?: string;
           last_seen_at?: string | null;
+          is_admin?: boolean;
         };
         Update: Partial<Profile>;
         Relationships: [];
@@ -129,6 +138,15 @@ export type Database = {
           created_at?: string;
         };
         Update: Partial<RateLimit>;
+        Relationships: [];
+      };
+      site_content: {
+        Row: SiteContentRow;
+        Insert: Omit<SiteContentRow, "updated_at" | "updated_by"> & {
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: Partial<SiteContentRow>;
         Relationships: [];
       };
     };
