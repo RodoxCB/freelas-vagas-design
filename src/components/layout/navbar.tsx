@@ -52,15 +52,6 @@ export async function Navbar() {
             </Link>
           )}
 
-          {profile?.is_admin && (
-            <Link
-              href="/admin"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
-            >
-              Admin
-            </Link>
-          )}
-
           {user && (
             <Link
               href="/conta/dados"
