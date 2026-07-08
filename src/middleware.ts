@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ADMIN_GATE_COOKIE, isAdminGateCookieValid } from "@/lib/admin/gate";
 
 const protectedRoutes: Record<string, "designer" | "anunciante" | "any" | "admin"> = {
   "/designers/novo": "designer",
@@ -60,6 +61,16 @@ export async function middleware(request: NextRequest) {
 
       if (!profile?.is_admin) {
         return NextResponse.redirect(new URL("/", request.url));
+      }
+
+      const isAcessoPage = pathname.startsWith("/admin/acesso");
+      if (!isAcessoPage) {
+        const gateCookie = request.cookies.get(ADMIN_GATE_COOKIE)?.value;
+        if (!(await isAdminGateCookieValid(gateCookie))) {
+          const acessoUrl = new URL("/admin/acesso", request.url);
+          acessoUrl.searchParams.set("redirect", pathname);
+          return NextResponse.redirect(acessoUrl);
+        }
       }
     } else if (requiredTipo !== "any") {
       const { data: profile } = await supabase

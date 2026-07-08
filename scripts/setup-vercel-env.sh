@@ -35,7 +35,13 @@ done
 
 add_env "NEXT_PUBLIC_SITE_URL" "https://freelas-vagas-design.vercel.app" "production"
 add_env "NEXT_PUBLIC_SITE_URL" "https://freelas-vagas-design-git-staging-vdveiculos.vercel.app" "preview"
-add_env "NEXT_PUBLIC_SITE_URL" "http://localhost:3000" "development"
+  add_env "NEXT_PUBLIC_SITE_URL" "http://localhost:3000" "development"
+
+ADMIN_PASSWORD=$(openssl rand -base64 24)
+for env in production preview development; do
+  add_env "ADMIN_PASSWORD" "$ADMIN_PASSWORD" "$env"
+done
 
 echo "CRON_SECRET (guarde em local seguro): $CRON_SECRET"
+echo "ADMIN_PASSWORD (painel /admin): $ADMIN_PASSWORD"
 echo "Concluído."
