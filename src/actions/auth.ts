@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createActionClient } from "@/lib/supabase/action";
 import { touchLastSeen } from "@/lib/auth/activity";
 import { verifyTurnstile } from "@/lib/security/captcha";
 import { passwordSchema } from "@/lib/security/password";
@@ -90,7 +90,7 @@ export async function signUpAction(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await createActionClient();
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
@@ -145,7 +145,7 @@ export async function signInAction(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await createActionClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: values.password,
@@ -165,7 +165,7 @@ export async function signInAction(
 }
 
 export async function signOutAction() {
-  const supabase = await createClient();
+  const supabase = await createActionClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");
   redirect("/");
@@ -181,7 +181,7 @@ export async function forgotPasswordAction(
     return { fieldErrors: fieldErrors(parsed.error), values };
   }
 
-  const supabase = await createClient();
+  const supabase = await createActionClient();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
@@ -210,7 +210,7 @@ export async function updatePasswordAction(
     return { fieldErrors: fieldErrors(parsed.error), values };
   }
 
-  const supabase = await createClient();
+  const supabase = await createActionClient();
   const { error } = await supabase.auth.updateUser({
     password: parsed.data.password,
   });
