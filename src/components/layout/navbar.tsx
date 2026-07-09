@@ -2,6 +2,7 @@ import Link from "next/link";
 import { signOutAction } from "@/actions/auth";
 import { getProfile, getSession } from "@/lib/auth/session";
 import { getContentValue, getSiteContent } from "@/lib/site-content";
+import { SiteLogo } from "@/components/layout/site-logo";
 import { Button } from "@/components/ui";
 
 const links = [
@@ -20,9 +21,7 @@ export async function Navbar() {
   return (
     <header className="border-b border-zinc-200 bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-        <Link href="/" className="text-lg font-semibold text-zinc-900">
-          {getContentValue(content, "site.name")}
-        </Link>
+        <SiteLogo name={getContentValue(content, "site.name")} />
         <nav className="flex items-center gap-4 sm:gap-6">
           {links.map((link) => (
             <Link
