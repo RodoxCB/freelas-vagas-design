@@ -1,10 +1,13 @@
 import { z } from "zod";
-import { isValidBrazilianPhone } from "@/lib/utils/phone";
+import { isValidPhone } from "@/lib/utils/phone";
 
-export const brazilianPhoneSchema = z
+export const phoneSchema = z
   .string()
   .min(1, "Informe um telefone válido")
   .refine(
-    isValidBrazilianPhone,
-    "Informe um telefone brasileiro válido (+55 DDD número)"
+    isValidPhone,
+    "Informe um telefone válido com DDI e número"
   );
+
+/** @deprecated Use phoneSchema */
+export const brazilianPhoneSchema = phoneSchema;
