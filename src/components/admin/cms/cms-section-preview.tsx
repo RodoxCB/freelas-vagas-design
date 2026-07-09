@@ -1,6 +1,7 @@
 "use client";
 
 import { getContentValue, type SiteContentMap } from "@/lib/site-content";
+import Image from "next/image";
 import {
   CommunityBlock,
   HeroBlocks,
@@ -34,11 +35,17 @@ function PreviewFrame({
 function GeralPreview({ content }: { content: SiteContentMap }) {
   return (
     <PreviewFrame content={content}>
-      <header className="border-b border-zinc-200 bg-white px-4 py-3">
+      <header className="flex items-center gap-2.5 border-b border-zinc-200 bg-white px-4 py-3">
+        <Image
+          src="/logo.png"
+          alt={getContentValue(content, "site.name")}
+          width={32}
+          height={32}
+          className="rounded-full"
+        />
         <p className="text-lg font-semibold" style={{ color: "var(--color-text)" }}>
           {getContentValue(content, "site.name")}
         </p>
-        <p className="mt-1 text-xs text-zinc-500">Navbar — preview</p>
       </header>
       <main className="px-4 py-6">
         <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
