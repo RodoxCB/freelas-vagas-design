@@ -16,10 +16,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: getContentValue(content, "site.name"),
     description: getContentValue(content, "site.description"),
-    icons: {
-      icon: "/logo.png",
-      apple: "/logo.png",
-    },
   };
 }
 
