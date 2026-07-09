@@ -1,11 +1,27 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ESPECIALIDADES, NIVEIS } from "@/lib/constants";
+import { ESPECIALIDADES_GRUPOS, NIVEIS } from "@/lib/constants";
 
 export function DesignerFilters({ tags = [] }: { tags?: string[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [busca, setBusca] = useState("");
+
+  const especialidadeAtiva = searchParams.get("especialidade");
+  const query = busca.trim().toLowerCase();
+
+  const grupos = useMemo(
+    () =>
+      ESPECIALIDADES_GRUPOS.map((grupo) => ({
+        categoria: grupo.categoria,
+        itens: grupo.itens.filter(
+          (item) => query === "" || item.toLowerCase().includes(query)
+        ),
+      })).filter((grupo) => grupo.itens.length > 0),
+    [query]
+  );
 
   function updateFilter(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -18,16 +34,40 @@ export function DesignerFilters({ tags = [] }: { tags?: string[] }) {
     <div className="space-y-6">
       <div>
         <h3 className="text-sm font-medium text-zinc-900">Especialidade</h3>
-        <div className="mt-2 space-y-1">
-          <FilterOption label="Todas" active={!searchParams.get("especialidade")} onClick={() => updateFilter("especialidade", "")} />
-          {ESPECIALIDADES.map((e) => (
-            <FilterOption
-              key={e}
-              label={e}
-              active={searchParams.get("especialidade") === e}
-              onClick={() => updateFilter("especialidade", e)}
-            />
-          ))}
+        <input
+          type="search"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          placeholder="Buscar especialidade..."
+          className="mt-2 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+        />
+        <div className="mt-2 max-h-72 space-y-3 overflow-y-auto rounded-lg border border-zinc-100 p-2">
+          <FilterOption label="Todas" active={!especialidadeAtiva} onClick={() => updateFilter("especialidade", "")} />
+          {grupos.map((grupo) => {
+            const contemAtiva = grupo.itens.some((item) => item === especialidadeAtiva);
+            return (
+              <details key={grupo.categoria} open={query !== "" || contemAtiva}>
+                <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-zinc-400">
+                  {grupo.categoria}
+                </summary>
+                <div className="mt-1 space-y-1">
+                  {grupo.itens.map((item) => (
+                    <FilterOption
+                      key={item}
+                      label={item}
+                      active={especialidadeAtiva === item}
+                      onClick={() => updateFilter("especialidade", item)}
+                    />
+                  ))}
+                </div>
+              </details>
+            );
+          })}
+          {grupos.length === 0 && (
+            <p className="px-3 py-2 text-sm text-zinc-500">
+              Nenhuma especialidade encontrada.
+            </p>
+          )}
         </div>
       </div>
 
