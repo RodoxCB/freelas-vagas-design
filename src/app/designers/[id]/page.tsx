@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getDesignerById } from "@/actions/designers";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { Badge, Button } from "@/components/ui";
 import { whatsappLink } from "@/lib/utils/whatsapp";
 
@@ -32,20 +32,11 @@ export default async function DesignerProfilePage({
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <div className="rounded-xl border border-zinc-200 bg-white p-8">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-          {designer.foto_url ? (
-            <Image
-              src={designer.foto_url}
-              alt={designer.nome}
-              width={96}
-              height={96}
-              className="h-24 w-24 rounded-full object-cover"
-              unoptimized
-            />
-          ) : (
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-indigo-100 text-2xl font-semibold text-indigo-700">
-              {designer.nome.charAt(0).toUpperCase()}
-            </div>
-          )}
+          <DesignerAvatar
+            nome={designer.nome}
+            fotoUrl={designer.foto_url}
+            size="xl"
+          />
 
           <div className="flex-1 text-center sm:text-left">
             <h1 className="text-2xl font-semibold text-zinc-900">{designer.nome}</h1>

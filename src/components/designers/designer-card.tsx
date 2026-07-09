@@ -1,35 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { Badge, Button } from "@/components/ui";
 import { whatsappLink } from "@/lib/utils/whatsapp";
 import type { Designer } from "@/types/database";
-
-function DesignerAvatar({ designer }: { designer: Designer }) {
-  if (designer.foto_url) {
-    return (
-      <Image
-        src={designer.foto_url}
-        alt={designer.nome}
-        width={48}
-        height={48}
-        className="h-12 w-12 rounded-full object-cover"
-        unoptimized
-      />
-    );
-  }
-
-  return (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-sm font-medium text-indigo-700">
-      {designer.nome.charAt(0).toUpperCase()}
-    </div>
-  );
-}
 
 export function DesignerCard({ designer }: { designer: Designer }) {
   return (
     <div className="flex flex-col rounded-xl border border-zinc-200 bg-white p-6">
       <div className="flex items-start gap-4">
-        <DesignerAvatar designer={designer} />
+        <DesignerAvatar nome={designer.nome} fotoUrl={designer.foto_url} />
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-zinc-900">{designer.nome}</h3>
           <p className="text-sm text-zinc-600">
@@ -78,7 +57,7 @@ export function DesignerCardCompact({ designer }: { designer: Designer }) {
       href={`/designers/${designer.id}`}
       className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition hover:border-zinc-300"
     >
-      <DesignerAvatar designer={designer} />
+      <DesignerAvatar nome={designer.nome} fotoUrl={designer.foto_url} />
       <div className="min-w-0 flex-1">
         <p className="font-medium text-zinc-900">{designer.nome}</p>
         <p className="text-sm text-zinc-600">

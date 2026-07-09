@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   makeAdminAction,
   removeAdminAction,
@@ -7,6 +6,7 @@ import {
   listUsersAdmin,
 } from "@/actions/admin";
 import { AdminDeleteButton } from "@/components/admin/admin-delete-button";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { Badge } from "@/components/ui";
 
 function formatDate(value: string | null) {
@@ -17,32 +17,6 @@ function formatDate(value: string | null) {
   }).format(new Date(value));
 }
 
-function UserAvatar({
-  nome,
-  fotoUrl,
-}: {
-  nome: string | null;
-  fotoUrl: string | null;
-}) {
-  if (fotoUrl) {
-    return (
-      <Image
-        src={fotoUrl}
-        alt={nome ?? "Avatar"}
-        width={40}
-        height={40}
-        className="h-10 w-10 rounded-full object-cover"
-      />
-    );
-  }
-
-  const initial = (nome?.trim()?.[0] ?? "?").toUpperCase();
-  return (
-    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700">
-      {initial}
-    </span>
-  );
-}
 
 export const metadata = { title: "Admin — Usuários" };
 
@@ -67,7 +41,12 @@ export default async function AdminUsuariosPage() {
             <tr key={user.id} className="border-b border-zinc-100 last:border-0">
               <td className="px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <UserAvatar nome={user.nome} fotoUrl={user.designer_foto_url} />
+                  <DesignerAvatar
+                    nome={user.nome}
+                    fotoUrl={user.designer_foto_url}
+                    size="sm"
+                    variant="zinc"
+                  />
                   <div>
                     <p className="font-medium text-zinc-900">{user.nome ?? "—"}</p>
                     <p className="text-zinc-600">{user.email}</p>

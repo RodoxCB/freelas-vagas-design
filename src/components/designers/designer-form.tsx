@@ -84,6 +84,7 @@ export function DesignerForm({
         label="Foto de perfil"
         name="foto"
         previewUrl={designer?.foto_url}
+        nome={designer?.nome ?? values.nome}
         error={errors.foto}
         optional
       />
