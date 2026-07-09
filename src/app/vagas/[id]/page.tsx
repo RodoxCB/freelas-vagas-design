@@ -4,7 +4,7 @@ import { getVagaById } from "@/actions/vagas";
 import { Badge, Button } from "@/components/ui";
 import { TIPO_VAGA_LABELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils/dates";
-import { formatPhone } from "@/lib/utils/phone";
+import { formatPhoneInternational } from "@/lib/utils/phone";
 import { whatsappLink } from "@/lib/utils/whatsapp";
 
 export async function generateMetadata({
@@ -79,7 +79,7 @@ export default async function VagaDetailPage({
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center rounded-lg border border-zinc-200 bg-white px-6 py-3 text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 sm:w-auto"
             >
-              Falar no WhatsApp ({formatPhone(vaga.contato_telefone.replace(/^55/, ""))})
+              Falar no WhatsApp ({formatPhoneInternational(vaga.contato_telefone)})
             </a>
             <p className="text-sm text-zinc-500">
               A candidatura acontece direto pelo canal informado pelo anunciante

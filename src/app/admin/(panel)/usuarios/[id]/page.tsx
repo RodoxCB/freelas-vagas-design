@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getUserDetailAdmin } from "@/actions/admin";
 import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { Badge } from "@/components/ui";
+import { formatPhoneInternational } from "@/lib/utils/phone";
 
 function formatDate(value: string | null) {
   if (!value) return "—";
@@ -112,7 +113,11 @@ export default async function AdminUsuarioDetailPage({
             </div>
             <div>
               <dt className="text-zinc-500">WhatsApp</dt>
-              <dd>{user.designer.whatsapp ?? "—"}</dd>
+              <dd>
+                {user.designer.whatsapp
+                  ? formatPhoneInternational(user.designer.whatsapp)
+                  : "—"}
+              </dd>
             </div>
             <div className="sm:col-span-2">
               <dt className="text-zinc-500">Bio</dt>
