@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TIPOS_VAGA } from "@/lib/constants";
-import { brazilianPhoneSchema } from "@/lib/validations/phone";
+import { phoneSchema } from "@/lib/validations/phone";
 
 const emailSchema = z.string().email("Informe um email válido");
 
@@ -10,7 +10,7 @@ export const vagaFormSchema = z.object({
   descricao: z.string().min(20, "Descrição deve ter pelo menos 20 caracteres"),
   requisitos: z.string().optional(),
   contato_email: emailSchema,
-  contato_telefone: brazilianPhoneSchema,
+  contato_telefone: phoneSchema,
   consentimento_publicacao: z.literal(true, {
     message: "É necessário autorizar a exibição pública dos dados de contato",
   }),
