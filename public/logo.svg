@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Freelas e Vagas de Design">
+  <defs>
+    <linearGradient id="bg" x1="80" y1="48" x2="432" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+  <rect x="156" y="172" width="118" height="148" rx="22" fill="#ffffff" fill-opacity="0.22"/>
+  <rect x="238" y="152" width="118" height="148" rx="22" fill="#ffffff"/>
+  <circle cx="297" cy="226" r="14" fill="#4f46e5"/>
+  <text
+    x="256"
+    y="392"
+    text-anchor="middle"
+    font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    font-size="54"
+    font-weight="700"
+    letter-spacing="6"
+    fill="#ffffff"
+    fill-opacity="0.92"
+  >FVD</text>
+</svg>
