@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SIZES = {
-  sm: { px: 40, dim: "h-10 w-10", text: "text-sm" },
-  md: { px: 48, dim: "h-12 w-12", text: "text-sm" },
-  lg: { px: 80, dim: "h-20 w-20", text: "text-xs" },
-  xl: { px: 96, dim: "h-24 w-24", text: "text-2xl font-semibold" },
+  sm: { dim: "h-10 w-10", text: "text-sm" },
+  md: { dim: "h-12 w-12", text: "text-sm" },
+  lg: { dim: "h-20 w-20", text: "text-xs" },
+  xl: { dim: "h-24 w-24", text: "text-2xl font-semibold" },
 } as const;
 
 type AvatarSize = keyof typeof SIZES;
@@ -24,8 +23,12 @@ export function DesignerAvatar({
   variant?: "indigo" | "zinc";
 }) {
   const [error, setError] = useState(false);
-  const { px, dim, text } = SIZES[size];
+  const { dim, text } = SIZES[size];
   const initial = (nome?.trim()?.[0] ?? "?").toUpperCase();
+
+  useEffect(() => {
+    setError(false);
+  }, [fotoUrl]);
 
   const fallbackClass =
     variant === "indigo"
@@ -43,13 +46,10 @@ export function DesignerAvatar({
   }
 
   return (
-    <Image
+    <img
       src={fotoUrl}
       alt={nome ?? "Avatar"}
-      width={px}
-      height={px}
       className={`shrink-0 rounded-full object-cover ${dim}`}
-      unoptimized
       onError={() => setError(true)}
     />
   );

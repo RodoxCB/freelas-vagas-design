@@ -28,6 +28,8 @@ export type DesignerFormState = {
   success: boolean;
   id?: string;
   hidden?: boolean;
+  foto_url?: string | null;
+  nome?: string;
   fieldErrors?: Record<string, string>;
   values?: Record<string, unknown>;
   message?: string;
@@ -220,7 +222,7 @@ export async function createDesignerAction(
   revalidatePath("/designers");
   revalidatePath("/");
 
-  return { success: true, id: data.id, hidden: status === "oculto" };
+  return { success: true, id: data.id, hidden: status === "oculto", foto_url: fotoUrl, nome: parsed.data.nome };
 }
 
 export async function updateDesignerAction(
@@ -294,5 +296,11 @@ export async function updateDesignerAction(
   revalidatePath("/designers");
   revalidatePath(`/designers/${designerId}`);
 
-  return { success: true, id: designerId, hidden: status === "oculto" };
+  return {
+    success: true,
+    id: designerId,
+    hidden: status === "oculto",
+    foto_url: fotoUrl,
+    nome: parsed.data.nome,
+  };
 }
