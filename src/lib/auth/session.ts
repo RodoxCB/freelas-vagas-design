@@ -76,9 +76,16 @@ export async function uploadImage(
   const processed = await processImage(Buffer.from(arrayBuffer));
   const path = `${userId}/${prefix}-${Date.now()}.${processed.extension}`;
 
+  // Copy into a fresh, exactly-sized Uint8Array before uploading. A Node Buffer
+  // (what sharp returns) is a view into Node's shared memory pool; passing it
+  // straight to storage-js lets the runtime fetch layer mis-serialize it as
+  // UTF-8 text, replacing every non-ASCII byte with U+FFFD and producing an
+  // undecodable image. A standalone Uint8Array avoids the pool/byteOffset issue.
+  const uploadBody = new Uint8Array(processed.buffer);
+
   const { error } = await supabase.storage
     .from(bucket)
-    .upload(path, processed.buffer, {
+    .upload(path, uploadBody, {
       contentType: processed.contentType,
       upsert: true,
     });
