@@ -64,6 +64,8 @@ function AvatarImage({
       src={fotoUrl}
       alt={nome ?? "Avatar"}
       className={`shrink-0 rounded-full object-cover ${dim}`}
+      referrerPolicy="no-referrer"
+      decoding="async"
       onError={() => setError(true)}
     />
   );
