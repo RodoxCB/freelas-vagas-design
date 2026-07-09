@@ -74,7 +74,7 @@ Contatos:
 ## Monitoramento
 
 - **Sentry** (se `NEXT_PUBLIC_SENTRY_DSN` configurado): erros de runtime e auth
-- **Vercel Analytics / Logs:** falhas de deploy e 5xx
+- **Vercel Analytics / Speed Insights / Logs:** visitas, Core Web Vitals (LCP, INP, CLS), falhas de deploy e 5xx
 - **Supabase Logs:** auth failures, queries anômalas
 
 ## Manutenção de dependências
