@@ -1,16 +1,73 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 const SIZES = {
-  sm: { px: 40, dim: "h-10 w-10", text: "text-sm" },
-  md: { px: 48, dim: "h-12 w-12", text: "text-sm" },
-  lg: { px: 80, dim: "h-20 w-20", text: "text-xs" },
-  xl: { px: 96, dim: "h-24 w-24", text: "text-2xl font-semibold" },
+  sm: { dim: "h-10 w-10", text: "text-sm" },
+  md: { dim: "h-12 w-12", text: "text-sm" },
+  lg: { dim: "h-20 w-20", text: "text-xs" },
+  xl: { dim: "h-24 w-24", text: "text-2xl font-semibold" },
 } as const;
 
 type AvatarSize = keyof typeof SIZES;
+
+function AvatarFallback({
+  initial,
+  dim,
+  text,
+  fallbackClass,
+}: {
+  initial: string;
+  dim: string;
+  text: string;
+  fallbackClass: string;
+}) {
+  return (
+    <div
+      className={`flex shrink-0 items-center justify-center rounded-full font-medium ${dim} ${text} ${fallbackClass}`}
+    >
+      {initial}
+    </div>
+  );
+}
+
+function AvatarImage({
+  fotoUrl,
+  nome,
+  dim,
+  initial,
+  text,
+  fallbackClass,
+}: {
+  fotoUrl: string;
+  nome: string | null;
+  dim: string;
+  initial: string;
+  text: string;
+  fallbackClass: string;
+}) {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <AvatarFallback
+        initial={initial}
+        dim={dim}
+        text={text}
+        fallbackClass={fallbackClass}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={fotoUrl}
+      alt={nome ?? "Avatar"}
+      className={`shrink-0 rounded-full object-cover ${dim}`}
+      onError={() => setError(true)}
+    />
+  );
+}
 
 export function DesignerAvatar({
   nome,
@@ -23,8 +80,7 @@ export function DesignerAvatar({
   size?: AvatarSize;
   variant?: "indigo" | "zinc";
 }) {
-  const [error, setError] = useState(false);
-  const { px, dim, text } = SIZES[size];
+  const { dim, text } = SIZES[size];
   const initial = (nome?.trim()?.[0] ?? "?").toUpperCase();
 
   const fallbackClass =
@@ -32,25 +88,26 @@ export function DesignerAvatar({
       ? "bg-indigo-100 text-indigo-700"
       : "bg-zinc-200 text-zinc-700";
 
-  if (!fotoUrl || error) {
+  if (!fotoUrl) {
     return (
-      <div
-        className={`flex shrink-0 items-center justify-center rounded-full font-medium ${dim} ${text} ${fallbackClass}`}
-      >
-        {initial}
-      </div>
+      <AvatarFallback
+        initial={initial}
+        dim={dim}
+        text={text}
+        fallbackClass={fallbackClass}
+      />
     );
   }
 
   return (
-    <Image
-      src={fotoUrl}
-      alt={nome ?? "Avatar"}
-      width={px}
-      height={px}
-      className={`shrink-0 rounded-full object-cover ${dim}`}
-      unoptimized
-      onError={() => setError(true)}
+    <AvatarImage
+      key={fotoUrl}
+      fotoUrl={fotoUrl}
+      nome={nome}
+      dim={dim}
+      initial={initial}
+      text={text}
+      fallbackClass={fallbackClass}
     />
   );
 }

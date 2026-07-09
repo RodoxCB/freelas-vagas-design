@@ -9,6 +9,7 @@ import {
 import { Button, Checkbox, Input, Select, Textarea } from "@/components/ui";
 import { EspecialidadesSelect } from "@/components/ui/multi-select";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { TagSelector } from "@/components/ui/tag-selector";
 import { MAX_PORTFOLIO_LINKS, NIVEIS } from "@/lib/constants";
@@ -55,6 +56,15 @@ export function DesignerForm({
             ? "Seu perfil foi salvo, mas está oculto porque falta link de portfólio válido."
             : "Seu perfil já está visível na busca."}
         </p>
+        {state.foto_url && (
+          <div className="mt-4 flex justify-center">
+            <DesignerAvatar
+              nome={state.nome ?? designer?.nome ?? null}
+              fotoUrl={state.foto_url}
+              size="lg"
+            />
+          </div>
+        )}
         {state.id && !state.hidden && (
           <Button href={`/designers/${state.id}`} className="mt-4">
             Ver perfil
