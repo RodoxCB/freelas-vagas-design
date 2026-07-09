@@ -64,7 +64,7 @@ export async function requireAdmin() {
 
 export async function uploadImage(
   supabase: Awaited<ReturnType<typeof createClient>>,
-  file: File,
+  file: Blob,
   bucket: "avatars" | "vagas",
   userId: string,
   prefix: string

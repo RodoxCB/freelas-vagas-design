@@ -23,9 +23,10 @@ export async function processImage(
   return { buffer: processed, contentType: "image/jpeg", extension: "jpg" };
 }
 
-export function validateImageFile(file: File): string | null {
+export function validateImageFile(file: Blob): string | null {
   const allowed = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowed.includes(file.type)) {
+  const type = file.type || "";
+  if (!allowed.includes(type)) {
     return "Formato inválido. Use JPEG, PNG ou WebP.";
   }
   if (file.size > 5 * 1024 * 1024) {
