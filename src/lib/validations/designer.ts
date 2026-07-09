@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { MAX_PORTFOLIO_LINKS, NIVEIS } from "@/lib/constants";
 import { isSafeHttpUrl } from "@/lib/security/sanitize";
+import { brazilianPhoneSchema } from "@/lib/validations/phone";
 
 const MAX_TAGS = 15;
 
@@ -19,7 +20,7 @@ export const designerFormSchema = z.object({
     .array(urlSchema)
     .min(1, "Informe pelo menos um link de portfólio")
     .max(MAX_PORTFOLIO_LINKS, `Máximo de ${MAX_PORTFOLIO_LINKS} links`),
-  whatsapp: z.string().min(10, "Informe um WhatsApp válido"),
+  whatsapp: brazilianPhoneSchema,
   linkedin_url: z.union([urlSchema, z.literal("")]).optional(),
   bio: z.string().max(500).optional(),
   tags: z
