@@ -2,6 +2,33 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
+
+function isBlobUrl(url: string) {
+  return url.startsWith("blob:");
+}
+
+function UploadPreview({
+  preview,
+  nome,
+}: {
+  preview: string;
+  nome?: string | null;
+}) {
+  if (isBlobUrl(preview)) {
+    return (
+      <img
+        src={preview}
+        alt="Preview"
+        className="h-20 w-20 shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <DesignerAvatar nome={nome ?? "Preview"} fotoUrl={preview} size="lg" />
+  );
+}
 
 export function ImageUpload({
   label,
@@ -9,12 +36,14 @@ export function ImageUpload({
   previewUrl,
   error,
   optional,
+  nome,
 }: {
   label: string;
   name: string;
   previewUrl?: string | null;
   error?: string;
   optional?: boolean;
+  nome?: string | null;
 }) {
   const [preview, setPreview] = useState<string | null>(previewUrl ?? null);
 
@@ -31,14 +60,7 @@ export function ImageUpload({
       </label>
       <div className="flex items-center gap-4">
         {preview ? (
-          <Image
-            src={preview}
-            alt="Preview"
-            width={80}
-            height={80}
-            className="h-20 w-20 rounded-full object-cover"
-            unoptimized
-          />
+          <UploadPreview preview={preview} nome={nome} />
         ) : (
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-zinc-100 text-zinc-400 text-xs">
             Sem foto
@@ -54,6 +76,29 @@ export function ImageUpload({
       </div>
       {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
+  );
+}
+
+function VagaPreview({ preview }: { preview: string }) {
+  if (isBlobUrl(preview)) {
+    return (
+      <img
+        src={preview}
+        alt="Preview da vaga"
+        className="h-40 w-full rounded-lg object-cover"
+      />
+    );
+  }
+
+  return (
+    <Image
+      src={preview}
+      alt="Preview da vaga"
+      width={400}
+      height={200}
+      className="h-40 w-full rounded-lg object-cover"
+      unoptimized
+    />
   );
 }
 
@@ -77,16 +122,7 @@ export function VagaImageUpload({
       <label className="block text-sm font-medium text-zinc-700">
         Arte da vaga (opcional)
       </label>
-      {preview && (
-        <Image
-          src={preview}
-          alt="Preview da vaga"
-          width={400}
-          height={200}
-          className="h-40 w-full rounded-lg object-cover"
-          unoptimized
-        />
-      )}
+      {preview && <VagaPreview preview={preview} />}
       <input
         type="file"
         name="imagem"

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getUserDetailAdmin } from "@/actions/admin";
+import { DesignerAvatar } from "@/components/designers/designer-avatar";
 import { Badge } from "@/components/ui";
 
 function formatDate(value: string | null) {
@@ -44,19 +45,12 @@ export default async function AdminUsuarioDetailPage({
 
       <section className="rounded-xl border border-zinc-200 bg-white p-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          {user.designer?.foto_url ? (
-            <Image
-              src={user.designer.foto_url}
-              alt={user.nome ?? "Avatar"}
-              width={96}
-              height={96}
-              className="h-24 w-24 rounded-full object-cover"
-            />
-          ) : (
-            <span className="flex h-24 w-24 items-center justify-center rounded-full bg-zinc-200 text-2xl font-semibold text-zinc-700">
-              {(user.nome?.trim()?.[0] ?? "?").toUpperCase()}
-            </span>
-          )}
+          <DesignerAvatar
+            nome={user.nome}
+            fotoUrl={user.designer?.foto_url}
+            size="xl"
+            variant="zinc"
+          />
           <div className="flex-1 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold text-zinc-900">
