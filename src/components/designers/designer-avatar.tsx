@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { proxiedStorageUrl } from "@/lib/images/storage-url";
 
 const SIZES = {
   sm: { dim: "h-10 w-10", text: "text-sm" },
@@ -47,6 +48,7 @@ function AvatarImage({
   fallbackClass: string;
 }) {
   const [error, setError] = useState(false);
+  const displayUrl = proxiedStorageUrl(fotoUrl) ?? fotoUrl;
 
   if (error) {
     return (
@@ -61,7 +63,7 @@ function AvatarImage({
 
   return (
     <img
-      src={fotoUrl}
+      src={displayUrl}
       alt={nome ?? "Avatar"}
       className={`shrink-0 rounded-full object-cover ${dim}`}
       referrerPolicy="no-referrer"
