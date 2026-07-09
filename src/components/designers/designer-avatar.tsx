@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const SIZES = {
   sm: { dim: "h-10 w-10", text: "text-sm" },
@@ -10,6 +10,64 @@ const SIZES = {
 } as const;
 
 type AvatarSize = keyof typeof SIZES;
+
+function AvatarFallback({
+  initial,
+  dim,
+  text,
+  fallbackClass,
+}: {
+  initial: string;
+  dim: string;
+  text: string;
+  fallbackClass: string;
+}) {
+  return (
+    <div
+      className={`flex shrink-0 items-center justify-center rounded-full font-medium ${dim} ${text} ${fallbackClass}`}
+    >
+      {initial}
+    </div>
+  );
+}
+
+function AvatarImage({
+  fotoUrl,
+  nome,
+  dim,
+  initial,
+  text,
+  fallbackClass,
+}: {
+  fotoUrl: string;
+  nome: string | null;
+  dim: string;
+  initial: string;
+  text: string;
+  fallbackClass: string;
+}) {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <AvatarFallback
+        initial={initial}
+        dim={dim}
+        text={text}
+        fallbackClass={fallbackClass}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={fotoUrl}
+      alt={nome ?? "Avatar"}
+      className={`shrink-0 rounded-full object-cover ${dim}`}
+      onError={() => setError(true)}
+    />
+  );
+}
 
 export function DesignerAvatar({
   nome,
@@ -22,35 +80,34 @@ export function DesignerAvatar({
   size?: AvatarSize;
   variant?: "indigo" | "zinc";
 }) {
-  const [error, setError] = useState(false);
   const { dim, text } = SIZES[size];
   const initial = (nome?.trim()?.[0] ?? "?").toUpperCase();
-
-  useEffect(() => {
-    setError(false);
-  }, [fotoUrl]);
 
   const fallbackClass =
     variant === "indigo"
       ? "bg-indigo-100 text-indigo-700"
       : "bg-zinc-200 text-zinc-700";
 
-  if (!fotoUrl || error) {
+  if (!fotoUrl) {
     return (
-      <div
-        className={`flex shrink-0 items-center justify-center rounded-full font-medium ${dim} ${text} ${fallbackClass}`}
-      >
-        {initial}
-      </div>
+      <AvatarFallback
+        initial={initial}
+        dim={dim}
+        text={text}
+        fallbackClass={fallbackClass}
+      />
     );
   }
 
   return (
-    <img
-      src={fotoUrl}
-      alt={nome ?? "Avatar"}
-      className={`shrink-0 rounded-full object-cover ${dim}`}
-      onError={() => setError(true)}
+    <AvatarImage
+      key={fotoUrl}
+      fotoUrl={fotoUrl}
+      nome={nome}
+      dim={dim}
+      initial={initial}
+      text={text}
+      fallbackClass={fallbackClass}
     />
   );
 }
