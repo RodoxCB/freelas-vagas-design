@@ -14,8 +14,10 @@ major_version = 17
 
 [auth]
 enabled = true
-site_url = "https://freelas-vagas-design.vercel.app"
+site_url = "https://vagasdesign.com.br"
 additional_redirect_urls = [
+  "https://vagasdesign.com.br/auth/callback",
+  "https://www.vagasdesign.com.br/auth/callback",
   "https://freelas-vagas-design.vercel.app/auth/callback",
   "https://freelas-vagas-design-git-staging-vdveiculos.vercel.app/auth/callback",
   "http://localhost:3000/auth/callback",
