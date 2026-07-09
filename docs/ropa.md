@@ -15,7 +15,7 @@
 | Cadastro e autenticação | Criar conta e proteger acesso | Email, senha (hash), nome, tipo de conta | Execução de contrato / legítimo interesse | Enquanto conta ativa | Supabase Auth (sa-east-1) |
 | Perfil de designer | Exibir profissionais na busca | Nome, WhatsApp, bio, foto, links, tags, localização | Consentimento (Art. 7º, I) | Enquanto perfil ativo; oculto inativo 12 meses → exclusão | Supabase DB + Storage (avatars) |
 | Publicação de vagas | Exibir oportunidades | Título, descrição, contatos, imagem | Consentimento (Art. 7º, I) | 45 dias listagem; contato anonimizado +90 dias após expiração | Supabase DB + Storage (vagas) |
-| Logs e segurança | Anti-abuso, auditoria | IP, timestamps de auth (Supabase) | Legítimo interesse / segurança | Padrão Supabase | Supabase, Vercel |
+| Logs e segurança | Anti-abuso, auditoria, métricas de performance | IP, timestamps de auth (Supabase); URL/rota e Web Vitals (Vercel Speed Insights, sem PII) | Legítimo interesse / segurança | Padrão Supabase; métricas agregadas na Vercel | Supabase, Vercel |
 
 ## Medidas de segurança
 
