@@ -14,6 +14,7 @@ import {
   parseDesignerFormData,
   zodFieldErrors,
 } from "@/lib/validations/designer";
+import { getPhotoFromFormData, photoUploadFieldError } from "@/lib/images/upload-form";
 import { checkRateLimit } from "@/lib/security/rate-limit";
 import type { Designer, Tag } from "@/types/database";
 
@@ -180,9 +181,13 @@ export async function createDesignerAction(
   }
 
   let fotoUrl: string | null = null;
-  const foto = formData.get("foto") as File | null;
-  if (foto && foto.size > 0) {
-    const upload = await uploadImage(auth.supabase, foto, "avatars", auth.user.id, "avatar");
+  const photo = getPhotoFromFormData(formData);
+  const photoError = photo.file ? null : photoUploadFieldError(photo.selected);
+  if (photoError) {
+    return { success: false, fieldErrors: { foto: photoError }, values };
+  }
+  if (photo.file) {
+    const upload = await uploadImage(auth.supabase, photo.file, "avatars", auth.user.id, "avatar");
     if ("error" in upload) {
       return { success: false, fieldErrors: { foto: upload.error }, values };
     }
@@ -253,9 +258,13 @@ export async function updateDesignerAction(
   }
 
   let fotoUrl = existing.foto_url;
-  const foto = formData.get("foto") as File | null;
-  if (foto && foto.size > 0) {
-    const upload = await uploadImage(auth.supabase, foto, "avatars", auth.user.id, "avatar");
+  const photo = getPhotoFromFormData(formData);
+  const photoError = photo.file ? null : photoUploadFieldError(photo.selected);
+  if (photoError) {
+    return { success: false, fieldErrors: { foto: photoError }, values };
+  }
+  if (photo.file) {
+    const upload = await uploadImage(auth.supabase, photo.file, "avatars", auth.user.id, "avatar");
     if ("error" in upload) {
       return { success: false, fieldErrors: { foto: upload.error }, values };
     }

@@ -83,7 +83,10 @@ export async function uploadImage(
       upsert: true,
     });
 
-  if (error) return { error: "Erro ao enviar imagem. Tente novamente." };
+  if (error) {
+    console.error("storage upload error:", error);
+    return { error: "Erro ao enviar imagem. Tente novamente." };
+  }
 
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
   return { url: data.publicUrl };

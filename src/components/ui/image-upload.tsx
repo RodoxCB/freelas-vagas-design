@@ -46,10 +46,12 @@ export function ImageUpload({
   nome?: string | null;
 }) {
   const [preview, setPreview] = useState<string | null>(previewUrl ?? null);
+  const [fileSelected, setFileSelected] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    setFileSelected(true);
     setPreview(URL.createObjectURL(file));
   }
 
@@ -58,6 +60,7 @@ export function ImageUpload({
       <label className="block text-sm font-medium text-zinc-700">
         {label}{optional ? "" : " *"}
       </label>
+      <input type="hidden" name="foto_selected" value={fileSelected ? "1" : "0"} />
       <div className="flex items-center gap-4">
         {preview ? (
           <UploadPreview preview={preview} nome={nome} />
