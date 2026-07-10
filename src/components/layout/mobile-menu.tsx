@@ -93,7 +93,7 @@ export function MobileMenuSheet({
             </>
           )}
 
-          {user && profile?.tipo === "anunciante" && (
+          {user && (
             <>
               <MenuLink href="/vagas/minhas" onNavigate={onClose}>
                 Minhas vagas

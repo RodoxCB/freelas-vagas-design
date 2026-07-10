@@ -44,7 +44,7 @@ export async function Navbar() {
               </Link>
             )}
 
-            {user && profile?.tipo === "anunciante" && (
+            {user && (
               <Link
                 href="/vagas/minhas"
                 className="text-sm text-zinc-600 hover:text-zinc-900"
@@ -83,7 +83,7 @@ export async function Navbar() {
             {profile?.tipo === "designer" && (
               <Button href="/designers/novo">Criar perfil</Button>
             )}
-            {profile?.tipo === "anunciante" && (
+            {user && (
               <Button href="/vagas/nova">Publicar vaga</Button>
             )}
           </div>

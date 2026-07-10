@@ -75,8 +75,8 @@ export async function getVagaById(id: string): Promise<Vaga | null> {
 }
 
 export async function getMyVagas(): Promise<Vaga[]> {
-  const auth = await requireAuth("anunciante");
-  if (!auth.user) return [];
+  const auth = await requireAuth();
+  if (auth.error || !auth.user) return [];
 
   const { data } = await auth.supabase
     .from("vagas")
@@ -91,7 +91,7 @@ export async function createVagaAction(
   _prev: VagaFormState,
   formData: FormData
 ): Promise<VagaFormState> {
-  const auth = await requireAuth("anunciante");
+  const auth = await requireAuth();
   if (auth.error || !auth.user) {
     return { success: false, fieldErrors: { _form: auth.error ?? "Não autorizado" } };
   }
@@ -156,8 +156,8 @@ export async function createVagaAction(
 }
 
 export async function encerrarVagaAction(vagaId: string): Promise<{ success: boolean }> {
-  const auth = await requireAuth("anunciante");
-  if (!auth.user) return { success: false };
+  const auth = await requireAuth();
+  if (auth.error || !auth.user) return { success: false };
 
   const { error } = await auth.supabase
     .from("vagas")

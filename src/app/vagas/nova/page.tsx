@@ -7,8 +7,8 @@ export const metadata = {
 };
 
 export default async function NovaVagaPage() {
-  const auth = await requireAuth("anunciante");
-  if (!auth.user) redirect("/login?redirect=/vagas/nova");
+  const auth = await requireAuth();
+  if (auth.error || !auth.user) redirect("/login?redirect=/vagas/nova");
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12 sm:px-6">

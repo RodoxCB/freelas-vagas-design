@@ -11,8 +11,8 @@ export const metadata = {
 };
 
 export default async function MinhasVagasPage() {
-  const auth = await requireAuth("anunciante");
-  if (!auth.user) redirect("/login?redirect=/vagas/minhas");
+  const auth = await requireAuth();
+  if (auth.error || !auth.user) redirect("/login?redirect=/vagas/minhas");
 
   const vagas = await getMyVagas();
 

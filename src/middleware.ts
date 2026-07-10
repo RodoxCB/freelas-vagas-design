@@ -5,8 +5,8 @@ import { ADMIN_GATE_COOKIE, isAdminGateCookieValid } from "@/lib/admin/gate";
 const protectedRoutes: Record<string, "designer" | "anunciante" | "any" | "admin"> = {
   "/designers/novo": "designer",
   "/designers/editar": "designer",
-  "/vagas/nova": "anunciante",
-  "/vagas/minhas": "anunciante",
+  "/vagas/nova": "any",
+  "/vagas/minhas": "any",
   "/conta/dados": "any",
   "/admin": "admin",
 };
