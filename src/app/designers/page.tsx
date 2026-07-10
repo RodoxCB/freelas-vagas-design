@@ -2,7 +2,10 @@ import { Suspense } from "react";
 import { getDesigners, getTags } from "@/actions/designers";
 import { DesignerCard } from "@/components/designers/designer-card";
 import { DesignerFilters } from "@/components/designers/filters";
+import { DesignerFiltersMobile } from "@/components/designers/filters-mobile";
 import { SearchBar } from "@/components/home/search-bar";
+import { Container } from "@/components/ui/container";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui";
 
 type SearchParams = Promise<{
@@ -28,33 +31,40 @@ export default async function DesignersPage({
     getTags(),
   ]);
 
+  const tagNames = tags.map((t) => t.nome);
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">Buscar designers</h1>
-          <p className="mt-1 text-zinc-600">
-            Encontre profissionais na comunidade
-          </p>
-        </div>
-        <Button href="/designers/novo">Criar meu perfil</Button>
-      </div>
+    <Container>
+      <PageHeader
+        title="Buscar designers"
+        subtitle={
+          designers.length > 0
+            ? `${designers.length} profissiona${designers.length === 1 ? "l" : "is"} encontrado${designers.length === 1 ? "" : "s"}`
+            : "Encontre profissionais na comunidade"
+        }
+        action={<Button href="/designers/novo">Criar meu perfil</Button>}
+      />
 
       <div className="mt-8">
-        <SearchBar defaultValue={params.q} />
+        <Suspense fallback={null}>
+          <SearchBar
+            defaultValue={params.q}
+            paramKeysToPreserve={["especialidade", "nivel", "tag"]}
+          />
+        </Suspense>
       </div>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[220px_1fr]">
+      <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
         <aside className="hidden lg:block">
           <Suspense fallback={null}>
-            <DesignerFilters tags={tags.map((t) => t.nome)} />
+            <DesignerFilters tags={tagNames} />
           </Suspense>
         </aside>
 
         <div>
           <div className="mb-6 lg:hidden">
             <Suspense fallback={null}>
-              <DesignerFilters tags={tags.map((t) => t.nome)} />
+              <DesignerFiltersMobile tags={tagNames} />
             </Suspense>
           </div>
 
@@ -65,13 +75,15 @@ export default async function DesignersPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center">
+            <div className="rounded-xl border border-zinc-200/80 bg-white p-12 text-center">
               <p className="text-zinc-600">Nenhum designer encontrado com esses filtros.</p>
-              <Button href="/designers/novo" className="mt-4">Criar perfil</Button>
+              <Button href="/designers/novo" className="mt-4">
+                Criar perfil
+              </Button>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

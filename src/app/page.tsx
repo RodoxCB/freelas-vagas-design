@@ -7,8 +7,9 @@ import {
   HeroBlocks,
   HowItWorks,
 } from "@/components/home/sections";
-import { SearchBar } from "@/components/home/search-bar";
-import { VagaCard } from "@/components/vagas/vaga-card";
+import { SearchBarWithTabs } from "@/components/home/search-bar";
+import { VagaCardCompact } from "@/components/vagas/vaga-card";
+import { Container } from "@/components/ui/container";
 import { getContentValue, getSiteContent } from "@/lib/site-content";
 
 export default async function HomePage() {
@@ -19,34 +20,34 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <div className="mb-12 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
+    <Container className="sm:py-16">
+      <div className="mb-10 text-center sm:mb-12">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">
           {getContentValue(content, "home.hero.title")}
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-zinc-600">
+        <p className="mx-auto mt-4 max-w-xl text-sm text-zinc-600 sm:text-base">
           {getContentValue(content, "home.hero.subtitle")}
         </p>
       </div>
 
       <HeroBlocks content={content} />
 
-      <div className="mt-12">
-        <SearchBar />
+      <div className="mt-10 sm:mt-12">
+        <SearchBarWithTabs />
       </div>
 
-      <div className="mt-20">
+      <div className="mt-16 sm:mt-20">
         <HowItWorks content={content} />
       </div>
 
-      <section className="mt-20">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-zinc-900">
+      <section className="mt-16 sm:mt-20">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-xl font-semibold text-zinc-900 sm:text-2xl">
             {getContentValue(content, "home.featured.title")}
           </h2>
           <Link
             href="/designers"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="shrink-0 text-sm font-medium text-[var(--color-primary)] hover:opacity-80"
           >
             Ver todos →
           </Link>
@@ -60,44 +61,44 @@ export default async function HomePage() {
         ) : (
           <p className="mt-6 text-zinc-500">
             {getContentValue(content, "home.empty.designers")}{" "}
-            <Link href="/designers/novo" className="text-indigo-600">
+            <Link href="/designers/novo" className="text-[var(--color-primary)]">
               Seja o primeiro
             </Link>
           </p>
         )}
       </section>
 
-      <section className="mt-20">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-zinc-900">
+      <section className="mt-16 sm:mt-20">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-xl font-semibold text-zinc-900 sm:text-2xl">
             {getContentValue(content, "home.vagas.title")}
           </h2>
           <Link
             href="/vagas"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="shrink-0 text-sm font-medium text-[var(--color-primary)] hover:opacity-80"
           >
             Ver todas →
           </Link>
         </div>
         {vagas.length > 0 ? (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4">
             {vagas.map((vaga) => (
-              <VagaCard key={vaga.id} vaga={vaga} />
+              <VagaCardCompact key={vaga.id} vaga={vaga} />
             ))}
           </div>
         ) : (
           <p className="mt-6 text-zinc-500">
             {getContentValue(content, "home.empty.vagas")}{" "}
-            <Link href="/vagas/nova" className="text-indigo-600">
+            <Link href="/vagas/nova" className="text-[var(--color-primary)]">
               Publicar a primeira
             </Link>
           </p>
         )}
       </section>
 
-      <div className="mt-20">
+      <div className="mt-16 sm:mt-20">
         <CommunityBlock content={content} />
       </div>
-    </div>
+    </Container>
   );
 }

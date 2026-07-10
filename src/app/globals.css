@@ -2,19 +2,94 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
+
+  /* Colors */
   --color-primary: var(--color-primary, #4f46e5);
   --color-background: var(--color-background, #fafafa);
   --color-text: var(--color-text, #18181b);
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-text-muted: #71717a;
+  --color-text-subtle: #a1a1aa;
+  --color-accent-subtle: color-mix(in srgb, var(--color-primary) 8%, white);
+
+  /* Spacing (8pt grid) */
+  --spacing-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
 }
 
 :root {
   --color-primary: #4f46e5;
   --color-background: #fafafa;
   --color-text: #18181b;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-text-muted: #71717a;
+  --color-text-subtle: #a1a1aa;
+  --color-accent-subtle: color-mix(in srgb, var(--color-primary) 8%, white);
 }
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
   background-color: var(--color-background);
   color: var(--color-text);
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottom-nav-offset {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    .bottom-nav-offset {
+      padding-bottom: 0;
+    }
+  }
+
+  .sticky-action-offset {
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    .sticky-action-offset {
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

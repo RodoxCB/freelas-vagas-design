@@ -80,7 +80,7 @@ export default async function DesignerProfilePage({
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-indigo-600 hover:text-indigo-700"
+                    className="text-sm text-[var(--color-primary)] hover:opacity-80"
                   >
                     {url}
                   </a>
@@ -97,7 +97,7 @@ export default async function DesignerProfilePage({
               href={designer.linkedin_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-block text-sm text-indigo-600 hover:text-indigo-700"
+              className="mt-2 inline-block text-sm text-[var(--color-primary)] hover:opacity-80"
             >
               {designer.linkedin_url}
             </a>
@@ -112,7 +112,7 @@ export default async function DesignerProfilePage({
             )}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 sm:w-auto"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition hover:opacity-90 sm:w-auto"
           >
             Chamar no WhatsApp
           </a>

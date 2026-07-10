@@ -9,3 +9,7 @@ export function whatsappLink(phone: string, message?: string): string {
   const base = `https://wa.me/${num}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
+
+export function vagaWhatsappMessage(titulo: string): string {
+  return `Olá! Vi a vaga "${titulo}" no Freelas e Vagas de Design e tenho interesse.`;
+}

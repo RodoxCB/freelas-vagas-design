@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { getVagas } from "@/actions/vagas";
 import { SearchBar } from "@/components/home/search-bar";
 import { VagaCard } from "@/components/vagas/vaga-card";
+import { Container } from "@/components/ui/container";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui";
 import { TIPOS_VAGA, TIPO_VAGA_LABELS } from "@/lib/constants";
 
@@ -16,32 +19,36 @@ export default async function VagasPage({
   const vagas = await getVagas({ q: params.q, tipo: params.tipo });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">Vagas</h1>
-          <p className="mt-1 text-zinc-600">
-            Oportunidades abertas na comunidade
-          </p>
-        </div>
-        <Button href="/vagas/nova">Publicar vaga</Button>
-      </div>
+    <Container>
+      <PageHeader
+        title="Vagas"
+        subtitle={
+          vagas.length > 0
+            ? `${vagas.length} oportunidade${vagas.length === 1 ? "" : "s"} aberta${vagas.length === 1 ? "" : "s"}`
+            : "Oportunidades abertas na comunidade"
+        }
+        action={<Button href="/vagas/nova">Publicar vaga</Button>}
+      />
 
       <div className="mt-8">
-        <SearchBar
-          defaultValue={params.q}
-          action="/vagas"
-          placeholder="Busque por título, descrição..."
-        />
+        <Suspense fallback={null}>
+          <SearchBar
+            defaultValue={params.q}
+            action="/vagas"
+            placeholder="Busque por título, descrição..."
+            paramKeysToPreserve={["tipo"]}
+          />
+        </Suspense>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
-        <FilterLink label="Todas" href="/vagas" active={!params.tipo} />
+      <div className="mt-6 -mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-1 scrollbar-hide sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
+        <FilterLink label="Todas" q={params.q} active={!params.tipo} />
         {TIPOS_VAGA.map((tipo) => (
           <FilterLink
             key={tipo}
             label={TIPO_VAGA_LABELS[tipo]}
-            href={`/vagas?tipo=${tipo}`}
+            tipo={tipo}
+            q={params.q}
             active={params.tipo === tipo}
           />
         ))}
@@ -54,33 +61,40 @@ export default async function VagasPage({
           ))}
         </div>
       ) : (
-        <div className="mt-12 rounded-xl border border-zinc-200 bg-white p-12 text-center">
+        <div className="mt-12 rounded-xl border border-zinc-200/80 bg-white p-12 text-center">
           <p className="text-zinc-600">Nenhuma vaga encontrada.</p>
           <Button href="/vagas/nova" className="mt-4">
             Publicar vaga
           </Button>
         </div>
       )}
-    </div>
+    </Container>
   );
 }
 
 function FilterLink({
   label,
-  href,
+  q,
+  tipo,
   active,
 }: {
   label: string;
-  href: string;
+  q?: string;
+  tipo?: string;
   active: boolean;
 }) {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (tipo) params.set("tipo", tipo);
+  const href = params.toString() ? `/vagas?${params.toString()}` : "/vagas";
+
   return (
     <Link
       href={href}
-      className={`rounded-full px-3 py-1.5 text-sm transition ${
+      className={`inline-flex min-h-9 shrink-0 snap-start items-center rounded-full px-3 py-1.5 text-sm transition ${
         active
-          ? "bg-indigo-600 text-white"
-          : "bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-50"
+          ? "bg-[var(--color-primary)] text-white"
+          : "border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
       }`}
     >
       {label}
