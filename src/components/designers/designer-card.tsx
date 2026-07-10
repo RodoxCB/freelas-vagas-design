@@ -6,7 +6,7 @@ import type { Designer } from "@/types/database";
 
 export function DesignerCard({ designer }: { designer: Designer }) {
   return (
-    <div className="flex flex-col rounded-xl border border-zinc-200 bg-white p-6">
+    <div className="flex flex-col rounded-xl border border-zinc-200/80 bg-white p-4 sm:p-6">
       <div className="flex items-start gap-4">
         <DesignerAvatar nome={designer.nome} fotoUrl={designer.foto_url} />
         <div className="flex-1 min-w-0">
@@ -35,16 +35,16 @@ export function DesignerCard({ designer }: { designer: Designer }) {
       )}
 
       <div className="mt-6 flex gap-2">
-        <Button href={`/designers/${designer.id}`} variant="secondary" className="flex-1">
+        <Button href={`/designers/${designer.id}`} variant="secondary" size="md" className="flex-1">
           Ver perfil
         </Button>
         <a
           href={whatsappLink(designer.whatsapp)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+          className="inline-flex min-h-11 flex-1 items-center justify-center rounded-lg bg-[var(--color-primary)] px-4 text-sm font-medium text-white transition hover:opacity-90"
         >
-          Chamar no WhatsApp
+          WhatsApp
         </a>
       </div>
     </div>

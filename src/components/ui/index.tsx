@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { type ReactNode } from "react";
 
+const sizes = {
+  sm: "min-h-9 px-3 py-2 text-sm",
+  md: "min-h-11 px-4 py-2.5 text-sm",
+  lg: "min-h-12 px-5 py-3 text-base",
+} as const;
+
 export function Button({
   children,
   variant = "primary",
+  size = "md",
   className = "",
   href,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary" | "ghost";
+  size?: keyof typeof sizes;
   href?: string;
 }) {
   const variants = {
@@ -16,14 +24,20 @@ export function Button({
       "bg-[var(--color-primary)] text-white hover:opacity-90 border border-transparent",
     secondary:
       "bg-white text-zinc-900 hover:bg-zinc-50 border border-zinc-200",
-    ghost: "bg-transparent text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent",
+    ghost:
+      "bg-transparent text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent",
   };
 
-  const classes = `inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${className}`;
+  const classes = `inline-flex items-center justify-center rounded-lg font-medium transition disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`;
 
   if (href) {
+    const { onClick, ...linkProps } = props;
     return (
-      <Link href={href} className={classes}>
+      <Link
+        href={href}
+        className={classes}
+        onClick={onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined}
+      >
         {children}
       </Link>
     );
@@ -69,7 +83,7 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-xl border border-zinc-200 bg-white p-6 ${className}`}
+      className={`rounded-xl border border-zinc-200/80 bg-white p-4 sm:p-6 ${className}`}
     >
       {children}
     </div>
@@ -93,7 +107,7 @@ export function Input({
         </label>
       )}
       <input
-        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] ${className}`}
+        className={`min-h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] ${className}`}
         {...props}
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
@@ -173,7 +187,7 @@ export function Select({
         </label>
       )}
       <select
-        className={`w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 ${className}`}
+        className={`min-h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-900 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] ${className}`}
         {...props}
       >
         {children}
@@ -182,3 +196,6 @@ export function Select({
     </div>
   );
 }
+
+export { Container } from "@/components/ui/container";
+export { PageHeader } from "@/components/ui/page-header";

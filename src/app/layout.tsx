@@ -3,8 +3,10 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
+import { MobileNavProvider } from "@/components/layout/mobile-nav-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { ThemeStyles } from "@/components/theme/theme-styles";
+import { getProfile, getSession } from "@/lib/auth/session";
 import { getContentValue, getSiteContent } from "@/lib/site-content";
 import "./globals.css";
 
@@ -26,15 +28,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { user } = await getSession();
+  const profile = user ? await getProfile() : null;
+
   return (
     <html lang="pt-BR" className={`${geistSans.variable} h-full antialiased`}>
       <head>
         <ThemeStyles />
       </head>
       <body className="flex min-h-full flex-col bg-[var(--color-background)] font-sans text-[var(--color-text)]">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <MobileNavProvider user={user} profile={profile}>
+          <Navbar />
+          <main className="flex-1 bottom-nav-offset">{children}</main>
+          <Footer />
+        </MobileNavProvider>
         <Analytics />
         <SpeedInsights />
       </body>

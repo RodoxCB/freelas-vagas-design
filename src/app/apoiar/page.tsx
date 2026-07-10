@@ -53,7 +53,7 @@ export default async function ApoiarPage() {
           href={linkUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition hover:bg-indigo-700"
+          className="mt-8 inline-flex min-h-11 items-center rounded-lg bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition hover:opacity-90"
         >
           {linkLabel}
         </Link>

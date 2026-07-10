@@ -39,7 +39,7 @@ export function DesignerFilters({ tags = [] }: { tags?: string[] }) {
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
           placeholder="Buscar especialidade..."
-          className="mt-2 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          className="mt-2 w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-primary)_20%,transparent)]"
         />
         <div className="mt-2 max-h-72 space-y-3 overflow-y-auto rounded-lg border border-zinc-100 p-2">
           <FilterOption label="Todas" active={!especialidadeAtiva} onClick={() => updateFilter("especialidade", "")} />
@@ -111,8 +111,10 @@ function FilterOption({ label, active, onClick }: { label: string; active: boole
     <button
       type="button"
       onClick={onClick}
-      className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${
-        active ? "bg-indigo-50 font-medium text-indigo-700" : "text-zinc-600 hover:bg-zinc-50"
+      className={`block w-full min-h-11 rounded-lg px-3 py-2 text-left text-sm transition ${
+        active
+          ? "bg-[var(--color-accent-subtle)] font-medium text-[var(--color-primary)]"
+          : "text-zinc-600 hover:bg-zinc-50"
       }`}
     >
       {label}
